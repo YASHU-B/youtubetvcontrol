@@ -25,7 +25,7 @@ import { PLAYLIST } from "@/data/playlist";
 
 
 export default function TVPlayer() {
-    const [showSyncOverlay, setShowSyncOverlay] = useState(true);
+    const [showSyncOverlay, setShowSyncOverlay] = useState(false);
     const syncOverlayTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
     const syncState = useChannelSync();
     const playerRef = useRef<YouTubePlayer | null>(null);
@@ -493,13 +493,13 @@ export default function TVPlayer() {
             if (playRevealTimer.current) clearTimeout(playRevealTimer.current);
             playRevealTimer.current = setTimeout(() => {
                 setIsActuallyPlaying(true);
-                // Show sync overlay for 4 seconds after video starts
+                // Show sync overlay briefly (800ms) after video starts
                 setShowSyncOverlay(true);
                 if (syncOverlayTimer.current) clearTimeout(syncOverlayTimer.current);
                 syncOverlayTimer.current = setTimeout(() => {
                     setShowSyncOverlay(false);
-                }, 4000);
-            }, 1000); // Reduced to 1.0s (from 4.0s) for a much faster, snappier reveal on slow TV browsers/WebViews
+                }, 800);
+            }, 200); // Fast 0.2s reveal
         }
         // 3 = Buffering
         else if (state === 3) {
@@ -991,8 +991,8 @@ export default function TVPlayer() {
                         display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '1rem',
                         pointerEvents: 'none',
                         opacity: (isActuallyPlaying && !isBuffering && !hasError && !showSyncOverlay) ? 0 : 1,
-                        // Slow reveal (1s) only, instant re-cover
-                        transition: (isActuallyPlaying && !isBuffering && !hasError && !showSyncOverlay) ? 'opacity 4s ease' : 'none',
+                        // Fast 0.4s fade-out reveal
+                        transition: (isActuallyPlaying && !isBuffering && !hasError && !showSyncOverlay) ? 'opacity 0.4s ease' : 'none',
                     }}
                 >
                     {!hasError && (
