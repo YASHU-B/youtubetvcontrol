@@ -1060,7 +1060,8 @@ export default function TVPlayer() {
             {/* Click/Touch Blocker to completely prevent browser from routing tap events to the YouTube iframe.
                 Also functions as a global user-gesture trigger to unmute/play if initial autoplay is blocked. */}
             <div 
-                className="absolute inset-0 z-[30] bg-transparent pointer-events-none" 
+                className="absolute inset-0 z-[30] bg-transparent pointer-events-auto cursor-default" 
+                onClick={handleScreenInteraction}
             />
 
             {/* OSD Layer - Now integrated for guaranteed layering */}
