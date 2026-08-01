@@ -493,12 +493,12 @@ export default function TVPlayer() {
             if (playRevealTimer.current) clearTimeout(playRevealTimer.current);
             playRevealTimer.current = setTimeout(() => {
                 setIsActuallyPlaying(true);
-                // Show sync overlay briefly (800ms) after video starts
+                // Show sync overlay for 4 seconds after video starts
                 setShowSyncOverlay(true);
                 if (syncOverlayTimer.current) clearTimeout(syncOverlayTimer.current);
                 syncOverlayTimer.current = setTimeout(() => {
                     setShowSyncOverlay(false);
-                }, 800);
+                }, 4000); // 4 second sync overlay
             }, 200); // Fast 0.2s reveal
         }
         // 3 = Buffering
@@ -965,17 +965,37 @@ export default function TVPlayer() {
                             onError={onError}
                             onPlay={() => { }}
                         />
-                        {/* Inner cover: always in DOM, never removed — only opacity changes.
-                             Slow fade to transparent when playing, INSTANT back to black on any pause/buffer. */}
+                        {/* Inner cover: hides YouTube's play/pause center icon at state transitions */}
                         <div
                             style={{
                                 position: 'absolute', inset: 0, zIndex: 20,
                                 background: 'black',
                                 pointerEvents: 'none',
                                 opacity: isActuallyPlaying ? 0 : 1,
-                                // Slow reveal (1s) so YouTube icon is never seen, instant re-cover
-                                transition: isActuallyPlaying ? 'opacity 1s ease' : 'none',
+                                // Slightly slower reveal so YouTube center icon is ALWAYS hidden
+                                transition: isActuallyPlaying ? 'opacity 1.5s ease' : 'none',
                             }}
+                        />
+                        {/* Full event blocker — sits over the entire iframe (z-50).
+                            Consumes ALL mouse, touch, pointer events silently.
+                            No onClick or action — touch screen does nothing. */}
+                        <div
+                            style={{
+                                position: 'absolute', inset: 0, zIndex: 50,
+                                background: 'transparent',
+                                pointerEvents: 'auto',
+                                cursor: 'default',
+                                touchAction: 'none',
+                                WebkitTouchCallout: 'none',
+                                userSelect: 'none',
+                            } as React.CSSProperties}
+                            onClickCapture={e => e.stopPropagation()}
+                            onTouchStartCapture={e => e.stopPropagation()}
+                            onTouchEndCapture={e => e.stopPropagation()}
+                            onTouchMoveCapture={e => e.stopPropagation()}
+                            onMouseDownCapture={e => e.stopPropagation()}
+                            onMouseUpCapture={e => e.stopPropagation()}
+                            onContextMenu={e => e.preventDefault()}
                         />
                     </div>
                 )}
@@ -1057,11 +1077,17 @@ export default function TVPlayer() {
                 )
             }
 
-            {/* Click/Touch Blocker to completely prevent browser from routing tap events to the YouTube iframe.
-                Also functions as a global user-gesture trigger to unmute/play if initial autoplay is blocked. */}
-            <div 
-                className="absolute inset-0 z-[30] bg-transparent pointer-events-auto cursor-default" 
-                onClick={handleScreenInteraction}
+            {/* Full-screen silent blocker — absorbs ALL clicks, taps, and touch events.
+                No action is triggered. Touch screen does nothing. */}
+            <div
+                className="absolute inset-0 z-[30] bg-transparent pointer-events-auto cursor-default"
+                style={{ touchAction: 'none', userSelect: 'none', WebkitTouchCallout: 'none' } as React.CSSProperties}
+                onClickCapture={e => e.stopPropagation()}
+                onTouchStartCapture={e => e.stopPropagation()}
+                onTouchEndCapture={e => e.stopPropagation()}
+                onTouchMoveCapture={e => e.stopPropagation()}
+                onMouseDownCapture={e => e.stopPropagation()}
+                onContextMenu={e => e.preventDefault()}
             />
 
             {/* OSD Layer - Now integrated for guaranteed layering */}

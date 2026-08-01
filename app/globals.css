@@ -29,6 +29,8 @@ body {
   top: 0;
   left: 0;
   z-index: 0;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 .youtube-player iframe {
@@ -38,7 +40,24 @@ body {
   transform: scale(1.25);
   transform-origin: center;
   pointer-events: none !important;
+  user-select: none !important;
+  -webkit-user-select: none !important;
   filter: contrast(1.02) saturate(1.08) brightness(0.98);
+}
+
+/* Completely block any YouTube overlay controls */
+.youtube-player > div {
+  pointer-events: none !important;
+}
+
+/* Block all touch interactions on YouTube wrapper */
+.youtube-player,
+.youtube-player iframe,
+.youtube-player > div {
+  touch-action: none !important;
+  -webkit-touch-callout: none !important;
+  user-select: none !important;
+  -webkit-user-select: none !important;
 }
 
 /* When player is not yet playing, the black cover div handles the visual.
