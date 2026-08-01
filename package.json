@@ -1,5 +1,5 @@
 {
-  "name": "youtube-tv",
+  "name": "yashubeatzTv",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -9,17 +9,31 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@capacitor/android": "^8.3.0",
+    "@capacitor/core": "^8.3.0",
+    "@supabase/supabase-js": "^2.105.4",
+    "clsx": "^2.1.1",
+    "firebase": "^12.8.0",
+    "firebase-admin": "^13.6.1",
+    "framer-motion": "^12.38.0",
+    "hls.js": "^1.6.15",
+    "lucide-react": "^0.563.0",
     "next": "16.1.6",
     "react": "19.2.3",
-    "react-dom": "19.2.3"
+    "react-dom": "19.2.3",
+    "react-youtube": "^10.1.0",
+    "tailwind-merge": "^3.4.0"
   },
   "devDependencies": {
+    "@capacitor/assets": "^3.0.5",
+    "@capacitor/cli": "^8.3.0",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.1.6",
+    "firebase-tools": "^15.5.1",
     "tailwindcss": "^4",
     "typescript": "^5"
   }

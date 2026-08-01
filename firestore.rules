@@ -1,0 +1,58 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Helper function for admin access 
+    // Admin uses anonymous authentication for access control
+    function isAdmin() {
+      return request.auth != null;
+    }
+
+    match /channels/{document=**} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+    
+    match /media_library/{document=**} {
+      allow read, write: if isAdmin();
+    }
+    
+    match /fcm_tokens/{token} {
+      allow read: if isAdmin();
+      allow create, update: if true;
+      allow delete: if isAdmin();
+    }
+    
+    match /messages/{messageId} {
+      allow read: if true;
+      allow create: if true;
+      allow update, delete: if isAdmin();
+    }
+    
+    match /dedications/{dedicationId} {
+      allow read: if true;
+      allow create: if true;
+      allow update, delete: if isAdmin();
+    }
+    
+    match /reactions/{reactionId} {
+      allow read, create: if true;
+      allow update, delete: if isAdmin();
+    }
+    
+    // Viewers and Poll requests are keyed by the user's local session ID
+    match /viewers/{sessionId} {
+      allow read, write: if true;
+    }
+    
+    match /pollVotes/{sessionId} {
+      allow read, write: if true;
+    }
+
+    // Default deny for everything else
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

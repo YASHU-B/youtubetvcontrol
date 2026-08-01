@@ -1,0 +1,16 @@
+# Ignore Android build directories and intermediate files
+android/
+ios/
+
+# Ignore local next.js build outputs
+.next/
+out/
+
+# Ignore system/editor configurations
+.idea/
+.vscode/
+
+# Ignore dependency and firebase caches
+node_modules/
+.firebase/
+.vercel/
